@@ -26,6 +26,8 @@ InitLCD:
 
     FOR y, 7
     FOR x, 8
+        ; Rows are $20 (32) tiles wide in VRAM and 12 tiles wide on
+        ; screen. 
         ld hl, _SCRN0 + (y + 2) * $20 + 2 + (x * 2)
         ld a, $05
         ld [hli], a
