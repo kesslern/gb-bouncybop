@@ -24,6 +24,16 @@ InitLCD:
     ld bc, $81A0 - _VRAM8000
     call zero
 
+    FOR y, 7
+    FOR x, 8
+        ld hl, _SCRN0 + (y + 2) * $20 + 2 + (x * 2)
+        ld a, $05
+        ld [hli], a
+        ld a, $06
+        ld [hli], a
+    ENDR
+    ENDR
+
     ; Add gbtest tile test
     ld hl, _VRAM8000 + 32
     ld de, GBT_Tile
