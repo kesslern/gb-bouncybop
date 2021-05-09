@@ -24,10 +24,15 @@ InitLCD:
     ld bc, $81A0 - _VRAM8000
     call zero
 
+    ; Draw blocks and init blocks in memory
     FOR y, 7
     FOR x, 8
-        ; Rows are $20 (32) tiles wide in VRAM and 12 tiles wide on
+        ; Rows are $20 (32) tiles wide in VRAM and 20 tiles wide on
         ; screen. 
+
+        ; y+2 => y row + 2 offset from top
+        ;    * $20 => $20 / row in VRAM
+        ;    + 2 => 2 offset from left 
         ld hl, _SCRN0 + (y + 2) * $20 + 2 + (x * 2)
         ld a, $05
         ld [hli], a
@@ -99,11 +104,6 @@ initSprites:
     ld [ramBALL_Y], a
     ld a, $04
     ld [ramBALL_TILE], a
-
-    ld a, 1
-    ld [ramBALL_X_DIR], a
-    ld [ramBALL_Y_DIR], a
-    ret
 
 startLCD:
     ld a, LCDCF_ON|LCDCF_BGON|LCDCF_BG8000|LCDCF_OBJ8|LCDCF_OBJON
