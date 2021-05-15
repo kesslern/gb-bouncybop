@@ -1,24 +1,56 @@
-SECTION "LCD Code", ROM0
+SECTION "Graphics Code", ROM0
 
-InitLCD:
-    call stopLCD
+; Init sprite data in OAM and related sprite data in WRAM.
+; Initializes a 4-tile wide paddle and the ball.
+InitSprites:
 
-    ; Init palette
-    ld a, %11011000
-    ld [rBGP], a
-    ld [rOBP0], a
-    ld [rOBP1], a
+    ; Set paddle Y value on paddle sprites
+    ld a, PADDLE_Y
+    ld [ramPADDLE_Y + 0 * 4], a
+    ld [ramPADDLE_Y + 1 * 4], a
+    ld [ramPADDLE_Y + 2 * 4], a
+    ld [ramPADDLE_Y + 3 * 4], a
 
-    ; Init scroll registers
-    xor a
-    ld [rSCY], a
-    ld [rSCX], a
+    ; Set paddle X value on paddle sprites
+    ld a, 8 * (0+1)
+    ld [ramPADDLE_X + 0 * 4], a
+    ld a, 8 * (1+1)
+    ld [ramPADDLE_X + 1 * 4], a
+    ld a, 8 * (2+1)
+    ld [ramPADDLE_X + 2 * 4], a
+    ld a, 8 * (3+1)
+    ld [ramPADDLE_X + 3 * 4], a
+    
+    ; Set paddle tiles to on the ends 
+    ld a, $02
+    ld [ramPADDLE_TILE + 0 * 4], a
+    ld [ramPADDLE_TILE + 3 * 4], a
+    ; Flip X for end paddle tile
+    ld a, %00100000 
+    ld [ramPADDLE_ATTR + 3 * 4], a
+    ; Set middle paddle tiles
+    ld a, $03
+    ld [ramPADDLE_TILE + 1 * 4], a
+    ld [ramPADDLE_TILE + 2 * 4], a
+    ;Set ball tile
+    ld a, $04
+    ld [ramBALL_TILE], a
 
-    ; Enable vblank interrupt
-    ld a, [rIE]
-    set 0, a
-    ld [rIE], a
+    ; Init ball position
+    ld a, 50
+    ld [ramBALL_X], a
+    ld a, 140
+    ld [ramBALL_Y], a
 
+    ; Init ball direction
+    ld a, -1
+    ld [ramBALL_Y_DIR], a
+    ld a, 1
+    ld [ramBALL_X_DIR], a
+
+    ret
+
+InitVRAM:
     ; Zero out Nintendo logo VRAM space
     ld hl, _VRAM8000
     ld bc, $81A0 - _VRAM8000
@@ -41,77 +73,21 @@ InitLCD:
     ENDR
     ENDR
 
-    ; Add gbtest tile test
+    ; Add tiles created with GBT
     ld hl, _VRAM8000 + 32
     ld de, GBT_Tile
     ld bc, 3 * 32
     call memcpy
 
+    ret
+
+SECTION "DMA Code", ROM0
+InitDMA:
     ; Zero out memory to copy to OAM
     ld hl, ramOAM
     ld bc, $100
     call zero
 
-    call initDMA
-    call initSprites
-    call startLCD
-    ret
-    
-stopLCD:
-    ld a, [rLCDC]
-    rlca
-    ret nc ; In this case, the LCD is already off
-
-.wait:
-    ld a, [rLY]
-    cp 145
-    jr nz, .wait
-
-    ld  a, [rLCDC]
-    res 7, a
-    ld  [rLCDC], a
-
-    ret
-
-initSprites:
-    ld a, PADDLE_Y
-    ld [ramPADDLE_Y + 0 * 4], a
-    ld [ramPADDLE_Y + 1 * 4], a
-    ld [ramPADDLE_Y + 2 * 4], a
-    ld [ramPADDLE_Y + 3 * 4], a
-
-    ld a, 8 * (0+1)
-    ld [ramPADDLE_X + 0 * 4], a
-    ld a, 8 * (1+1)
-    ld [ramPADDLE_X + 1 * 4], a
-    ld a, 8 * (2+1)
-    ld [ramPADDLE_X + 2 * 4], a
-    ld a, 8 * (3+1)
-    ld [ramPADDLE_X + 3 * 4], a
-    
-    ld a, $02
-    ld [ramPADDLE_TILE + 0 * 4], a
-    ld [ramPADDLE_TILE + 3 * 4], a
-    ld a, %00100000 ; flip X
-    ld [ramPADDLE_ATTR + 3 * 4], a
-    ld a, $03
-    ld [ramPADDLE_TILE + 1 * 4], a
-    ld [ramPADDLE_TILE + 2 * 4], a
-
-    ld a, 50
-    ld [ramBALL_X], a
-    ld a, 50
-    ld [ramBALL_Y], a
-    ld a, $04
-    ld [ramBALL_TILE], a
-
-startLCD:
-    ld a, LCDCF_ON|LCDCF_BGON|LCDCF_BG8000|LCDCF_OBJ8|LCDCF_OBJON
-    ld [rLCDC], a
-    ret
-
-SECTION "DMA Code", ROM0
-initDMA:
     ; Copy DMA code into HRAM
     ld hl, _HRAM
     ld de, runDMA

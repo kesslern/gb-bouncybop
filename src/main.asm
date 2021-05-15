@@ -6,6 +6,7 @@ INCLUDE "game_logic.asm"
 INCLUDE "graphics.asm"
 INCLUDE "header.asm"
 INCLUDE "input.asm"
+INCLUDE "lcd.asm"
 INCLUDE "memfns.asm"
 
 SECTION "vBlank interrupt handler", ROM0[$0040]
@@ -14,21 +15,16 @@ SECTION "vBlank interrupt handler", ROM0[$0040]
 
 SECTION "Game code", ROM0
 Start:
+    call StopLCD
     call InitLCD
-
-    ld hl, ramBALL_Y
-    ld a, 140
-    ld [hl], a
-
-    ld hl, ramBALL_Y_DIR
-    ld a, -1
-    ld [hl], a
-    ld hl, ramBALL_X_DIR
-    ld a, 1
-    ld [hl], a
+    call InitVRAM
+    call InitDMA
+    call InitSprites
 
     ; Shut sound down
     ld [rNR52], a
+
+    call StartLCD
 
     ei
     jp Loop
