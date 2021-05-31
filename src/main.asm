@@ -17,8 +17,9 @@ SECTION "Game code", ROM0
 Start:
     call StopLCD
     call InitLCD
-    call InitVRAM
     call InitDMA
+    call InitWRAM
+    call InitVRAM
     call InitSprites
 
     ; Shut sound down

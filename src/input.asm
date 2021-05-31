@@ -19,7 +19,7 @@ ReadInput:
     endr
     and a, $0F       ; Clear upper bits
     or a, b          ; Combine with stored upper bits in register b
-    ld [ramInput], a ; Store input in $C000 work ram
+    ld [ramINPUT], a ; Store input in $C000 work ram
     ret
 
 CheckBallBounds:

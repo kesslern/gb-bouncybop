@@ -1,24 +1,8 @@
-ramInput EQU _RAM + $0
-ramOAM   EQU _RAM + $100
-
-PADDLE_TILE_WIDTH EQU 4
-ramPADDLE_Y    EQU ramOAM + 0
-ramPADDLE_X    EQU ramOAM + 1
-ramPADDLE_TILE EQU ramOAM + 2
-ramPADDLE_ATTR EQU ramOAM + 3
-
-ramBALL_Y    EQU ramOAM + 4 * 4 + 0
-ramBALL_X    EQU ramOAM + 4 * 4 + 1
-ramBALL_TILE EQU ramOAM + 4 * 4 + 2
-ramBALL_ATTR EQU ramOAM + 4 * 4 + 3
+PADDLE_TILE_WIDTH EQU 4  ; Paddle is 4 tiles wide
+PADDLE_Y EQU 145
 
 PADDLE_X_MIN EQU 8
 PADDLE_X_MAX EQU 160 - (8 * PADDLE_TILE_WIDTH) + 8
-
-PADDLE_Y EQU 145
-
-ramBALL_X_DIR EQU ramInput + $1
-ramBALL_Y_DIR EQU ramInput + $2
 
 BALL_X_MIN EQU 7
 BALL_X_MAX EQU 161
@@ -27,3 +11,24 @@ BALL_Y_MAX EQU 144 + 20
 
 BLOCKS_HEIGHT EQU 7
 BLOCKS_WIDTH  EQU 8
+
+ramINPUT EQU _RAM + $0   ; $C000
+
+ramBALL_X_DIR EQU _RAM + $1 ; $C001
+ramBALL_Y_DIR EQU _RAM + $2 ; $C002
+
+; OAM mirror - 100 bytes
+ramOAM   EQU _RAM + $100 ; $C100
+
+; Sprite attribute locations in OAM mirror
+; Sprites 0-3 are paddles
+ramPADDLE_Y    EQU ramOAM + $0
+ramPADDLE_X    EQU ramOAM + $1
+ramPADDLE_TILE EQU ramOAM + $2
+ramPADDLE_ATTR EQU ramOAM + $3
+
+; Sprite 4 is the ball
+ramBALL_Y    EQU ramOAM + 4 * PADDLE_TILE_WIDTH + $0
+ramBALL_X    EQU ramOAM + 4 * PADDLE_TILE_WIDTH + $1
+ramBALL_TILE EQU ramOAM + 4 * PADDLE_TILE_WIDTH + $2
+ramBALL_ATTR EQU ramOAM + 4 * PADDLE_TILE_WIDTH + $3

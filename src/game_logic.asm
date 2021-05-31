@@ -1,5 +1,22 @@
+SECTION "Game Logic", ROM0
+
+InitWRAM:
+    ; Init ball position
+    ld a, 16
+    ld [ramBALL_X], a
+    ld a, 140
+    ld [ramBALL_Y], a
+
+    ; Init ball direction
+    ld a, -1
+    ld [ramBALL_Y_DIR], a
+    ld a, 1
+    ld [ramBALL_X_DIR], a
+
+    ret
+
 MovePaddle:
-    ld a, [ramInput]
+    ld a, [ramINPUT]
 
 .left:
     ; Check if left button pressed.
@@ -54,8 +71,10 @@ moveBall:
     ld a, [ramBALL_X_DIR]
     add a, [hl]
     ld [hl], a
+
     ld hl, ramBALL_Y
     ld a, [ramBALL_Y_DIR]
     add a, [hl]
     ld [hl], a
+
     ret

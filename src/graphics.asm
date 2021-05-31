@@ -3,7 +3,6 @@ SECTION "Graphics Code", ROM0
 ; Init sprite data in OAM and related sprite data in WRAM.
 ; Initializes a 4-tile wide paddle and the ball.
 InitSprites:
-
     ; Set paddle Y value on paddle sprites
     ld a, PADDLE_Y
     ld [ramPADDLE_Y + 0 * 4], a
@@ -32,21 +31,9 @@ InitSprites:
     ld a, $03
     ld [ramPADDLE_TILE + 1 * 4], a
     ld [ramPADDLE_TILE + 2 * 4], a
-    ;Set ball tile
+    ; Set ball tile
     ld a, $04
     ld [ramBALL_TILE], a
-
-    ; Init ball position
-    ld a, 50
-    ld [ramBALL_X], a
-    ld a, 140
-    ld [ramBALL_Y], a
-
-    ; Init ball direction
-    ld a, -1
-    ld [ramBALL_Y_DIR], a
-    ld a, 1
-    ld [ramBALL_X_DIR], a
 
     ret
 
