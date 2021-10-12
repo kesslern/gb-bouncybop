@@ -1,5 +1,4 @@
 SECTION "Header", ROM0[$0100]
-    di
     jp Start
 
 ; Space for header

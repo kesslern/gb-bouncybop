@@ -15,6 +15,7 @@ SECTION "vBlank interrupt handler", ROM0[$0040]
 
 SECTION "Game code", ROM0
 Start:
+    di
     call StopLCD
     call InitLCD
     call InitDMA
