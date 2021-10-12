@@ -13,7 +13,7 @@ SECTION "vBlank interrupt handler", ROM0[$0040]
     call Draw
     reti
 
-SECTION "Game code", ROM0
+SECTION "Game code", ROM0[$0150]
 Start:
     di
     call StopLCD

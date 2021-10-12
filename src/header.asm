@@ -1,4 +1,5 @@
-SECTION "Header", ROM0[$0100]
+SECTION "Entry", ROM0[$0100]
+    nop
     jp Start
 
 ; Space for header

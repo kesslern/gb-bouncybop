@@ -20,7 +20,7 @@ all: fix
 fix: build
 	$(FIX) -p0 -v $(OUTPUT).gb
 
-build: $(OBJ_FILES)
+build: clean $(OBJ_FILES)
 	$(LINKER) -m $(OUTPUT).map -n $(OUTPUT).sym -o $(OUTPUT).gb $(OBJ_FILES)
     
 $(BUILD_DIR)/obj/%.o : src/%.asm | $(OBJ_DIRS)
