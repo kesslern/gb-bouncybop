@@ -14,13 +14,6 @@ memcpy:
     jr nz, memcpy
     ret
 
-; src -> dest
-m_strcpy: MACRO
-    ld de, \1
-    ld hl, \2
-    call strcpy
-ENDM
-
 ; Zero a chunk of memory.
 ; @param bc - Number of bytes to zero
 ; @param hl - Start address
@@ -34,7 +27,7 @@ zero:
     ret
 
 ; Copy a 0-terminated string to VRAM
-; @param de - Source addressppp
+; @param de - Source address
 ; @param hl - Destination address
 strcpy:
     ld a, [de]  ; Grab 1 byte from source address

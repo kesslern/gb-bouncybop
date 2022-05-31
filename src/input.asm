@@ -1,25 +1,40 @@
 SECTION "Input Code", ROM0
 
 ReadInput:
-    ld a, %00100000  ; Select direction buttons
+    ;; Configure controls to read direction inputs
+    ld a, %00100000  
     ld [rP1], a
-    rept 5           ; Read input 5x to stabilize
+
+    ;; Read directional input 5x to stabilize
+    rept 5           
     ld a, [rP1]
     endr
+
+
+    ;; Store directional control information in the upper 4
+    ;; bits of register b
     and a, $0F       ; Clear upper 4 bits
     rla              ; Move lower 4 bits over to the upper 4 bits
     rla
     rla
     rla
     ld b, a          ; Store upper 4 bits in register b
-    ld a, %00010000  ; Select actions buttons
+
+    ;; Configure controls to read button inputs
+    ld a, %00010000 
     ld [rP1], a
-    rept 5           ; Read input 5x to stabilize
+
+    ;; Read button input 5x to stabilize
+    rept 5           
     ld a, [rP1]
     endr
+
+    ;; Copy the directional input data to register b
     and a, $0F       ; Clear upper bits
     or a, b          ; Combine with stored upper bits in register b
-    ld [ramINPUT], a ; Store input in $C000 work ram
+
+    ;; Store input in [ramINPUT] work ram
+    ld [ramINPUT], a
     ret
 
 CheckBallBounds:
@@ -51,7 +66,8 @@ CheckBallBounds:
     ret
 
 CheckDeath:
-    ret ; Temporary death removal
+    ;; Temporary death removal until collision works
+    ret 
     ld a, [ramBALL_Y]
     cp a, BALL_Y_MAX
     jr nz, .done
@@ -63,18 +79,21 @@ CheckDeath:
 
 CheckPaddleCollision:
     ld a, [ramBALL_Y]
+
+    ;; Return if ball Y won't collide with paddle
     cp a, PADDLE_Y-4
     ret nz
 
-    ld a, [ramPADDLE_X]
-    sub a, 5 ; compensate for sprite width
-    ld hl, ramBALL_X
-    cp a, [hl]
-    ret nc
+    ;; Return if ball X won't collide with paddle
+        ;; Check if ball is to left side
+        ld a, [ramPADDLE_X]
+        sub a, 5 ; subtract to collide with middle
+        ret_if_a_lt ramBALL_X
 
-    add a, 5 + PADDLE_TILE_WIDTH * 8 + 5
-    cp a, [hl]
-    ret c
+        add a, 5 + PADDLE_TILE_WIDTH * 8
+        ret_if_a_lt
+        cp a, [hl]
+        ret c
 
     ld a, -1
     ld [ramBALL_Y_DIR], a

@@ -2,6 +2,7 @@ INCLUDE "hardware.inc"
 INCLUDE "constants.inc"
 
 INCLUDE "data.asm"
+INCLUDE "macros.asm"
 INCLUDE "game_logic.asm"
 INCLUDE "graphics.asm"
 INCLUDE "header.asm"
@@ -23,7 +24,7 @@ Start:
     call InitVRAM
     call InitSprites
 
-    ; Shut sound down
+; Shut sound down
     ld [rNR52], a
 
     call StartLCD
