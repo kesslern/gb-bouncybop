@@ -33,3 +33,6 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 print-%  : ; @echo $* = $($*)
+
+bgb: all
+	bgb $(OUTPUT).gb -watch
