@@ -46,7 +46,7 @@ ReadInput:
     ld [ramINPUT], a
     ret
 
-CheckBallBounds:
+BounceBallAgainstWalls:
     ld a, [ramBALL_X]
     cp a, BALL_X_MIN
     jr nz, .next1
@@ -100,7 +100,6 @@ CheckPaddleCollision:
         ret_if_a_lt ramBALL_X
 
         add a, 5 + PADDLE_TILE_WIDTH * 8
-        ret_if_a_lt
         cp a, [hl]
         ret c
 

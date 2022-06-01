@@ -36,7 +36,7 @@ Loop:
     call ReadInput
     call MoveBall
     call MovePaddle
-    call CheckBallBounds
+    call BounceBallAgainstWalls
     call CheckPaddleCollision
     call CheckDeath
 
