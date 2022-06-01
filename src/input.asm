@@ -1,15 +1,24 @@
 SECTION "Input Code", ROM0
 
+;; Stores button input data into [ramINPUT].
+;;
+;; [ramINPUT] Bit 0 - Start
+;; [ramINPUT] Bit 1 - Select
+;; [ramINPUT] Bit 2 - A
+;; [ramINPUT] Bit 3 - B
+;; [ramINPUT] Bit 4 - Right
+;; [ramINPUT] Bit 5 - Left
+;; [ramINPUT] Bit 6 - Up
+;; [ramINPUT] Bit 7 - Down
 ReadInput:
     ;; Configure controls to read direction inputs
-    ld a, %00100000  
+    ld a, %00100000
     ld [rP1], a
 
     ;; Read directional input 5x to stabilize
-    rept 5           
+    rept 5
     ld a, [rP1]
     endr
-
 
     ;; Store directional control information in the upper 4
     ;; bits of register b
@@ -21,11 +30,11 @@ ReadInput:
     ld b, a          ; Store upper 4 bits in register b
 
     ;; Configure controls to read button inputs
-    ld a, %00010000 
+    ld a, %00010000
     ld [rP1], a
 
     ;; Read button input 5x to stabilize
-    rept 5           
+    rept 5
     ld a, [rP1]
     endr
 
@@ -67,7 +76,7 @@ CheckBallBounds:
 
 CheckDeath:
     ;; Temporary death removal until collision works
-    ret 
+    ret
     ld a, [ramBALL_Y]
     cp a, BALL_Y_MAX
     jr nz, .done
