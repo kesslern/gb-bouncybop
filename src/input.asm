@@ -13,11 +13,11 @@ SECTION "Input Code", ROM0
 ReadInput:
     ;; Configure controls to read direction inputs
     ld a, %00100000
-    ld [rP1], a
+    ldh [rP1], a
 
     ;; Read directional input 5x to stabilize
     rept 5
-    ld a, [rP1]
+    ldh a, [rP1]
     endr
 
     ;; Store directional control information in the upper 4
@@ -31,11 +31,11 @@ ReadInput:
 
     ;; Configure controls to read button inputs
     ld a, %00010000
-    ld [rP1], a
+    ldh [rP1], a
 
     ;; Read button input 5x to stabilize
     rept 5
-    ld a, [rP1]
+    ldh a, [rP1]
     endr
 
     ;; Copy the directional input data to register b
@@ -97,7 +97,9 @@ CheckPaddleCollision:
         ;; Check if ball is to left side
         ld a, [ramPADDLE_X]
         sub a, 5 ; subtract to collide with middle
-        ret_if_a_lt ramBALL_X
+        ld hl, ramBALL_X
+        cp a, [hl]
+        ret nc
 
         add a, 5 + PADDLE_TILE_WIDTH * 8
         cp a, [hl]

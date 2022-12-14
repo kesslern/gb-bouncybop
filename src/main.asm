@@ -25,12 +25,11 @@ Start:
     call InitSprites
 
 ; Shut sound down
-    ld [rNR52], a
+    ldh [rNR52], a
 
     call StartLCD
 
     ei
-    jp Loop
 
 Loop:
     call ReadInput
