@@ -3,7 +3,7 @@ SECTION "Input Code", ROM0
 ;; Stores button input data into [ramINPUT].
 ;;
 ;; [ramINPUT] Bit 0 - Start
-;; [ramINPUT] Bit 1 - Select
+ ;; [ramINPUT] Bit 1 - Select
 ;; [ramINPUT] Bit 2 - A
 ;; [ramINPUT] Bit 3 - B
 ;; [ramINPUT] Bit 4 - Right
@@ -12,7 +12,7 @@ SECTION "Input Code", ROM0
 ;; [ramINPUT] Bit 7 - Down
 ReadInput:
     ;; Configure controls to read direction inputs
-    ld a, %00100000
+    ld a, P1F_GET_DPAD
     ldh [rP1], a
 
     ;; Read directional input 5x to stabilize
@@ -30,13 +30,17 @@ ReadInput:
     ld b, a          ; Store upper 4 bits in register b
 
     ;; Configure controls to read button inputs
-    ld a, %00010000
+    ld a, P1F_GET_DPAD
     ldh [rP1], a
 
     ;; Read button input 5x to stabilize
     rept 5
     ldh a, [rP1]
     endr
+
+    ;; Release the controller
+    ld a, P1F_GET_NONE
+    ldh [rP1], a
 
     ;; Copy the directional input data to register b
     and a, $0F       ; Clear upper bits

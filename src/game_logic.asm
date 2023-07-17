@@ -29,7 +29,7 @@ MovePaddle:
     cp a, PADDLE_X_MIN
     ret z
 
-    ; Set new X location and update. 
+    ; Set new X location and update.
     ld a, [hl]
     sub a, 2
     jr .update
@@ -46,7 +46,7 @@ MovePaddle:
     cp a, [hl]
     ret z
 
-    ; Set new X location and update. 
+    ; Set new X location and update.
     ld a, [hl]
     add a, 2
 

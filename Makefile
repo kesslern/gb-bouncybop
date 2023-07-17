@@ -16,23 +16,20 @@ ASM_FLAGS       :=  -i $(INC_DIR) -i $(SRC_DIR)
 .PHONY: all clean
 
 all: fix
-    
+
 fix: build
 	$(FIX) -p0 -v $(OUTPUT).gb
 
 build: clean $(OBJ_FILES)
 	$(LINKER) -m $(OUTPUT).map -n $(OUTPUT).sym -o $(OUTPUT).gb $(OBJ_FILES)
-    
+
 $(BUILD_DIR)/obj/%.o : src/%.asm | $(OBJ_DIRS)
 	$(ASM) $(ASM_FLAGS) -o $@ $<
 
-$(OBJ_DIRS): 
+$(OBJ_DIRS):
 	mkdir -p $@
 
 clean:
 	rm -rf $(BUILD_DIR)
 
 print-%  : ; @echo $* = $($*)
-
-bgb: all
-	bgb $(OUTPUT).gb -watch
