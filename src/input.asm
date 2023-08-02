@@ -91,6 +91,11 @@ CheckDeath:
     ret
 
 CheckPaddleCollision:
+    ;; Return if ball is moving up
+    ld a, [ramBALL_Y_DIR]
+    cp a, -1
+    ret z
+
     ld a, [ramBALL_Y]
 
     ;; Return if ball Y won't collide with paddle

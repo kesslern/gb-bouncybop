@@ -1,0 +1,23 @@
+caller = "Start"
+
+[multiply]
+pc = "Multiply"
+b = 4
+c = 8
+[multiply.result]
+a = 32
+
+[multiply-zero1]
+pc = "Multiply"
+b = 4
+c = 0
+[multiply-zero1.result]
+a = 0
+
+
+[multiply-zero2]
+pc = "Multiply"
+b = 0
+c = 4
+[multiply-zero2.result]
+a = 0

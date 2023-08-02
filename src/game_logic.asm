@@ -13,6 +13,10 @@ InitWRAM:
     ld a, 1
     ld [ramBALL_X_DIR], a
 
+    ld a, 0
+    ld [should_delete_x], a
+    ld [should_delete_y], a
+
     ret
 
 MovePaddle:
