@@ -14,17 +14,6 @@ BLOCKS_WIDTH  EQU 8
 
 ;;; TODO: Convert to [wRAM] section
 
-ramINPUT EQU _RAM + $0   ; $C000
-
-ramBALL_X_DIR EQU _RAM + $1 ; $C001
-ramBALL_Y_DIR EQU _RAM + $2 ; $C002
-
-should_delete_x EQU _RAM + $3 ; $C003
-should_delete_y EQU _RAM + $4 ; $C004
-
-ramTMP1 EQU _RAM + $5 ; $C005
-ramTMP2 EQU _RAM + $6 ; $C006
-
 ; OAM mirror - 100 bytes
 ramOAM   EQU _RAM + $100 ; $C100
 

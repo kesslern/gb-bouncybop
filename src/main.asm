@@ -1,6 +1,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "constants.inc"
 
+INCLUDE "variables.asm"
 INCLUDE "data.asm"
 INCLUDE "game_logic.asm"
 INCLUDE "graphics.asm"
