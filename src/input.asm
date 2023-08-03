@@ -3,7 +3,7 @@ SECTION "Input Code", ROM0
 ;; Stores button input data into [ramINPUT].
 ;;
 ;; [ramINPUT] Bit 0 - Start
- ;; [ramINPUT] Bit 1 - Select
+;; [ramINPUT] Bit 1 - Select
 ;; [ramINPUT] Bit 2 - A
 ;; [ramINPUT] Bit 3 - B
 ;; [ramINPUT] Bit 4 - Right
@@ -22,12 +22,12 @@ ReadInput:
 
     ;; Store directional control information in the upper 4
     ;; bits of register b
-    and a, $0F       ; Clear upper 4 bits
-    rla              ; Move lower 4 bits over to the upper 4 bits
+    and a, $0F      ; Clear upper 4 bits
+    rla             ; Move lower 4 bits over to the upper 4 bits
     rla
     rla
     rla
-    ld b, a          ; Store upper 4 bits in register b
+    ld b, a         ; Store upper 4 bits in register b
 
     ;; Configure controls to read button inputs
     ld a, P1F_GET_DPAD
@@ -103,16 +103,16 @@ CheckPaddleCollision:
     ret nz
 
     ;; Return if ball X won't collide with paddle
-        ;; Check if ball is to left side
-        ld a, [ramPADDLE_X]
-        sub a, 5 ; subtract to collide with middle
-        ld hl, ramBALL_X
-        cp a, [hl]
-        ret nc
+    ;; Check if ball is to left side
+    ld a, [ramPADDLE_X]
+    sub a, 5 ; subtract to collide with middle
+    ld hl, ramBALL_X
+    cp a, [hl]
+    ret nc
 
-        add a, 5 + PADDLE_TILE_WIDTH * 8
-        cp a, [hl]
-        ret c
+    add a, 5 + PADDLE_TILE_WIDTH * 8
+    cp a, [hl]
+    ret c
 
     ld a, -1
     ld [ramBALL_Y_DIR], a
