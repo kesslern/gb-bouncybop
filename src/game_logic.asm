@@ -1,26 +1,26 @@
 SECTION "Game Logic", ROM0
 
-InitWRAM:
+InitBallRAM:
     ; Init ball position
     ld a, 16
-    ld [ramBALL_X], a
+    ld [wOamBallX], a
     ld a, 140
-    ld [ramBALL_Y], a
+    ld [wOamBallY], a
 
     ; Init ball direction
     ld a, -1
-    ld [ramBALL_Y_DIR], a
+    ld [wBallYDir], a
     ld a, 1
-    ld [ramBALL_X_DIR], a
+    ld [wBallXDir], a
 
     ld a, 0
-    ld [should_delete_x], a
-    ld [should_delete_y], a
+    ld [wShouldDeleteX], a
+    ld [wShouldDeleteY], a
 
     ret
 
 MovePaddle:
-    ld a, [ramINPUT]
+    ld a, [wInput]
 
 .left:
     ; Check if left button pressed.
@@ -28,7 +28,7 @@ MovePaddle:
     jr nz, .right
 
     ; Left is pressed. Ensure there's space to move left.
-    ld hl, ramPADDLE_X
+    ld hl, wOamPaddleX
     ld a, [hl]
     cp a, PADDLE_X_MIN
     ret z
@@ -45,7 +45,7 @@ MovePaddle:
     ret nz
 
     ; Right is pressed. Ensure there's space to move right.
-    ld hl, ramPADDLE_X
+    ld hl, wOamPaddleX
     ld a, PADDLE_X_MAX
     cp a, [hl]
     ret z
@@ -70,15 +70,14 @@ MovePaddle:
 
     ret
 
-moveBall:
-    ld hl, ramBALL_X
-    ld a, [ramBALL_X_DIR]
+MoveBall:
+    ld hl, wOamBallX
+    ld a, [wBallXDir]
     add a, [hl]
     ld [hl], a
 
-    ld hl, ramBALL_Y
-    ld a, [ramBALL_Y_DIR]
+    ld hl, wOamBallY
+    ld a, [wBallYDir]
     add a, [hl]
     ld [hl], a
-
     ret

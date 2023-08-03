@@ -21,7 +21,7 @@ Start:
     call StopLCD
     call InitLCD
     call InitDMA
-    call InitWRAM
+    call InitBallRAM
     call InitVRAM
     call InitSprites
 
@@ -40,16 +40,16 @@ Loop:
     call CheckDeath
 
      ; Check bounce on top while moving up
-    ld a, [ramBALL_Y_DIR]
+    ld a, [wBallYDir]
     cp -1
     jr nz, .end
 
-    ld a, [ramBALL_Y]
+    ld a, [wOamBallY]
     cp 88
     jr nz, .end
 
     ld a, 1
-    ld [ramBALL_Y_DIR], a
+    ld [wBallYDir], a
 
     ; Ball Y is 88 and moving up
     ; Tile of lowest block is 9*8 + 16 = 88
@@ -62,25 +62,25 @@ Loop:
     ; 56 is 0b0111000 -> 0b0111 -> 7
     ; 48 is 0b0110000 -> 0b0110 -> 6
     ; 40 is 0b0101000 -> 0b0101 -> 5
-    ld a, [ramBALL_Y]
+    ld a, [wOamBallY]
     srl a
     srl a
     srl a
 
     sub 5               ; Then subtract 3 to get the y index of the block
-    ld [should_delete_y], a
+    ld [wShouldDeleteY], a
     ld d, a
 
     ; Ball X is 0-152ish
     ; Remove lowest 4 bits to round to nearest 16
-    ld a, [ramBALL_X]
+    ld a, [wOamBallX]
     sub 8 ; Line up OAM coordinate with background coordinate
     srl a
     srl a
     srl a
     srl a
     dec a ; Compensate for left gutter
-    ld [should_delete_x], a
+    ld [wShouldDeleteX], a
     ld e, a
 
 .end:
@@ -91,14 +91,14 @@ Loop:
     halt
 
     ; Delete if we should
-    ld a, [should_delete_y]
+    ld a, [wShouldDeleteY]
     cp 0
     jr z, Loop
 
 
-    ld a, [should_delete_y]
+    ld a, [wShouldDeleteY]
     ld d, a
-    ld a, [should_delete_x]
+    ld a, [wShouldDeleteX]
     ld e, a
 
     ;;; Calculate OAM offset
@@ -135,8 +135,8 @@ Loop:
 
     ; Reset the should delete coordinates back to zero
     ld a, 0
-    ld [should_delete_y], a
-    ld [should_delete_x], a
+    ld [wShouldDeleteY], a
+    ld [wShouldDeleteX], a
 
     jp Loop
 

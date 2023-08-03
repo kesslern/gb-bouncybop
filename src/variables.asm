@@ -1,15 +1,15 @@
 SECTION "Variables", WRAM0
-ramINPUT:
+wInput:
   ds 1
 
-ramBALL_X_DIR:
+wBallXDir:
   ds 1
-ramBALL_Y_DIR:
+wBallYDir:
   ds 1
 
-should_delete_x:
+wShouldDeleteX:
   ds 1
-should_delete_y:
+wShouldDeleteY:
   ds 1
 
 SECTION "OAM Data",WRAM0,ALIGN[8]
@@ -17,27 +17,27 @@ ramOAM:
 
 ; Sprite attribute locations in OAM mirror
 ; Sprites 0-3 are paddles
-ramPADDLE_Y:
+wOamPaddleY:
   ds 1
-ramPADDLE_X:
+wOamPaddleX:
   ds 1
-ramPADDLE_TILE:
+wOamPaddleTile:
   ds 1
-ramPADDLE_ATTR:
+wOamPaddleAttr:
   ds 1
 
   ds 4 * (PADDLE_TILE_WIDTH-1)
 
 ; Sprite 4 is the ball
-ramBALL_Y:
+wOamBallY:
   ds 1
-ramBALL_X:
+wOamBallX:
   ds 1
-ramBALL_TILE:
+wOamBallTile:
   ds 1
-ramBALL_ATTR:
+wOamBallAttr:
   ds 1
 
-ramOAM_SPRITE_END:
-  ds 160 - (ramOAM_SPRITE_END - ramOAM)
+wOamSpriteEnd:
+  ds 160 - (wOamSpriteEnd - ramOAM)
 ramOAM_END:

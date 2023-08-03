@@ -1,15 +1,15 @@
 SECTION "Input Code", ROM0
 
-;; Stores button input data into [ramINPUT].
+;; Stores button input data into [wInput].
 ;;
-;; [ramINPUT] Bit 0 - Start
-;; [ramINPUT] Bit 1 - Select
-;; [ramINPUT] Bit 2 - A
-;; [ramINPUT] Bit 3 - B
-;; [ramINPUT] Bit 4 - Right
-;; [ramINPUT] Bit 5 - Left
-;; [ramINPUT] Bit 6 - Up
-;; [ramINPUT] Bit 7 - Down
+;; [wInput] Bit 0 - Start
+;; [wInput] Bit 1 - Select
+;; [wInput] Bit 2 - A
+;; [wInput] Bit 3 - B
+;; [wInput] Bit 4 - Right
+;; [wInput] Bit 5 - Left
+;; [wInput] Bit 6 - Up
+;; [wInput] Bit 7 - Down
 ReadInput:
     ;; Configure controls to read direction inputs
     ld a, P1F_GET_DPAD
@@ -46,57 +46,57 @@ ReadInput:
     and a, $0F       ; Clear upper bits
     or a, b          ; Combine with stored upper bits in register b
 
-    ;; Store input in [ramINPUT] work ram
-    ld [ramINPUT], a
+    ;; Store input in [wInput] work ram
+    ld [wInput], a
     ret
 
 BounceBallAgainstWalls:
-    ld a, [ramBALL_X]
+    ld a, [wOamBallX]
     cp a, BALL_X_MIN
     jr nz, .next1
     ld a, 1
-    ld [ramBALL_X_DIR], a
+    ld [wBallXDir], a
 .next1
-    ld a, [ramBALL_X]
+    ld a, [wOamBallX]
     cp a, BALL_X_MAX
     jr nz, .next2
     ld a, -1
-    ld [ramBALL_X_DIR], a
+    ld [wBallXDir], a
 .next2
-    ld a, [ramBALL_Y]
+    ld a, [wOamBallY]
     cp a, BALL_Y_MIN
     jr nz, .next3
     ld a, 1
-    ld [ramBALL_Y_DIR], a
+    ld [wBallYDir], a
 .next3
     ; This can be removed when death is added
-    ld a, [ramBALL_Y]
+    ld a, [wOamBallY]
     cp a, BALL_Y_MAX
     jr nz, .next4
     ld a, -1
-    ld [ramBALL_Y_DIR], a
+    ld [wBallYDir], a
 .next4
     ret
 
 CheckDeath:
     ;; Temporary death removal until collision works
     ret
-    ld a, [ramBALL_Y]
+    ld a, [wOamBallY]
     cp a, BALL_Y_MAX
     jr nz, .done
     xor a, a
-    ld [ramBALL_X_DIR], a
-    ld [ramBALL_Y_DIR], a
+    ld [wBallXDir], a
+    ld [wBallYDir], a
 .done
     ret
 
 CheckPaddleCollision:
     ;; Return if ball is moving up
-    ld a, [ramBALL_Y_DIR]
+    ld a, [wBallYDir]
     cp a, -1
     ret z
 
-    ld a, [ramBALL_Y]
+    ld a, [wOamBallY]
 
     ;; Return if ball Y won't collide with paddle
     cp a, PADDLE_Y-4
@@ -104,9 +104,9 @@ CheckPaddleCollision:
 
     ;; Return if ball X won't collide with paddle
     ;; Check if ball is to left side
-    ld a, [ramPADDLE_X]
+    ld a, [wOamPaddleX]
     sub a, 5 ; subtract to collide with middle
-    ld hl, ramBALL_X
+    ld hl, wOamBallX
     cp a, [hl]
     ret nc
 
@@ -115,16 +115,5 @@ CheckPaddleCollision:
     ret c
 
     ld a, -1
-    ld [ramBALL_Y_DIR], a
-    ret
-
-MoveBall:
-    ld hl, ramBALL_X
-    ld a, [ramBALL_X_DIR]
-    add a, [hl]
-    ld [hl], a
-    ld hl, ramBALL_Y
-    ld a, [ramBALL_Y_DIR]
-    add a, [hl]
-    ld [hl], a
+    ld [wBallYDir], a
     ret
