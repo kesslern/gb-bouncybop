@@ -8,7 +8,7 @@ InitLCD:
     ldh [rOBP1], a
 
     ; Init both scroll registers to zero
-    xor a
+    ld a, -16
     ldh [rSCY], a
     ldh [rSCX], a
 

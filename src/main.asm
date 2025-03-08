@@ -12,7 +12,7 @@ INCLUDE "lcd.asm"
 INCLUDE "memfns.asm"
 
 SECTION "vBlank interrupt handler", ROM0[$0040]
-    ; call _HRAM
+    call _HRAM
     reti
 
 SECTION "Game code", ROM0[$0150]
@@ -40,22 +40,10 @@ Loop:
     call CheckPaddleCollision
     call CheckDeath
 
-     ; Check bounce on top while moving up
-    ld a, [wBallYDir]
-    cp -1
-    jr nz, .end
-
-    ld a, [wOamBallY]
-    cp 88
-    jr nz, .end
-
-    ;; TODO: Bounce conditionally based on block collision
-    ld a, 1
-    ld [wBallYDir], a
-
     call CheckBrickCollisionMovingUp
+    ;; TODO: We could calculate VRAM offsets during the frame and store them
+    ;; instead of calculating them after vblank
 
-.end:
     call MoveBall
     call MovePaddle
 
@@ -64,8 +52,12 @@ Loop:
 
     ;; Here we can access and update the vRAM and update OAM
     call DeleteIfCollision
+    jr z, .end2
 
-    ;; TODO: Bounce conditionally based on block collision
+    ld a, 1
+    ld [wBallYDir], a
+
+.end2:
     call _HRAM
 
 

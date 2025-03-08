@@ -33,3 +33,6 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 print-%  : ; @echo $* = $($*)
+
+test: build
+	evunit --config test.toml --symfile $(OUTPUT).sym $(OUTPUT).gb

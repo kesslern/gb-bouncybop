@@ -1,23 +1,44 @@
 caller = "Start"
 
-[multiply]
-pc = "Multiply"
-b = 4
-c = 8
-[multiply.result]
-a = 32
+[GetTileByPixel-0x0]
+pc = "GetTileByPixel"
+b = 0x00
+c = 0x00
+[GetTileByPixel-0x0.result]
+hl = 0x9800
 
-[multiply-zero1]
-pc = "Multiply"
-b = 4
-c = 0
-[multiply-zero1.result]
-a = 0
+[GetTileByPixel-8x0]
+pc = "GetTileByPixel"
+b = 0x08
+c = 0x00
+[GetTileByPixel-8x0.result]
+hl = 0x9801
+
+[GetTileByPixel-0x8]
+pc = "GetTileByPixel"
+b = 0x00
+c = 0x08
+[GetTileByPixel-0x8.result]
+hl = 0x9820
 
 
-[multiply-zero2]
-pc = "Multiply"
-b = 0
-c = 4
-[multiply-zero2.result]
-a = 0
+[GetTileByPixel-8x8]
+pc = "GetTileByPixel"
+b = 0x08
+c = 0x08
+[GetTileByPixel-8x8.result]
+hl = 0x9821
+
+[GetTileByPixel-1]
+pc = "GetTileByPixel"
+b = 0x04
+c = 0x08
+[GetTileByPixel-1.result]
+hl = 0x9820
+
+[GetTileByPixel-2]
+pc = "GetTileByPixel"
+b = 83
+c = 59
+[GetTileByPixel-2.result]
+hl = 0x98EA

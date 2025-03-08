@@ -71,7 +71,7 @@ InitVRAM:
         ; y+2 => y row + 2 offset from top
         ;    * $20 => $20 / row in VRAM
         ;    + 2 => 2 offset from left
-        ld hl, _SCRN0 + (y + 2) * $20 + 2 + (x * 2)
+        ld hl, _SCRN0 + y * $20 + (x * 2)
         ld a, $05
         ld [hli], a
         ld a, $06

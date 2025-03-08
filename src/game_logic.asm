@@ -131,8 +131,33 @@ CheckPaddleCollision:
   ld [wBallYDir], a
   ret
 
+;; Check if OAM X/Y coordanets are inside the blocks on the background
+;; Params: d = y, e = x
+CheckCoordinateInsideBlocks:
+
 CheckBrickCollisionMovingUp:
-    ;; Load ball Y and remove lowest 3 bits to floor to nearest 8
+  ;; Return if ball is moving down
+  ld a, [wBallYDir]
+  cp 1
+  ret z
+
+  ld a, [wOamBallY]
+  sub a, 89
+  ret nc
+
+  ld a, [wOamBallY]
+  sub a, 24
+  ret c
+
+  ld a, [wOamBallX]
+  sub a, 23
+  ret c
+
+  ld a, [wOamBallX]
+  sub a, 16+16*8
+  ret nc
+
+  ;; Load ball Y and remove lowest 3 bits to floor to nearest 8
   ld a, [wOamBallY]
   srl a
   srl a
@@ -157,8 +182,8 @@ CheckBrickCollisionMovingUp:
 
   ret
 
+; If a is z on return, then we collided with a brick
 DeleteIfCollision:
-  ; Delete if we should
   ld a, [wShouldDeleteY]
   cp -1
   ret z
@@ -192,17 +217,61 @@ DeleteIfCollision:
   jr .addypart
 
 .addxpart:
-  xor a
   ld bc, 2 + _SCRN0
-  sla e
+  sla e ; Multiply by 2 because blocks are 2 wide
   add hl, de
   add hl, bc
+
+  ld a, [hl]
+  jr nz, .hit
+
+  ;; Return nz == no hit
+  ld a, -1
+  ld [wShouldDeleteX], a
+  ld [wShouldDeleteY], a
+  ret
+
+.hit:
+  xor a
   ld [hli], a
   ld [hl], a
 
-  ; Reset the should delete coordinates back to zero
   ld a, -1
-  ld [wShouldDeleteY], a
   ld [wShouldDeleteX], a
+  ld [wShouldDeleteY], a
 
+  ld a, 0
+  cp -1
   ret
+
+; Convert a pixel position to a tilemap address
+; hl = $9800 + X + Y * 32
+; @param b: X
+; @param c: Y
+; @return hl: tile address
+GetTileByPixel:
+    ; First, we need to divide by 8 to convert a pixel position to a tile position.
+    ; After this we want to multiply the Y position by 32.
+    ; These operations effectively cancel out so we only need to mask the Y value.
+    ld a, c
+    and a, %11111000
+    ld l, a
+    ld h, 0
+    ; Now we have the position * 8 in hl
+    add hl, hl ; position * 16
+    add hl, hl ; position * 32
+    ; Convert the X position to an offset.
+    ld a, b
+    srl a ; a / 2
+    srl a ; a / 4
+    srl a ; a / 8
+    ; Add the two offsets together.
+    add a, l
+    ld l, a
+    adc a, h
+    sub a, l
+    ld h, a
+    ; Add the offset to the tilemap's base address, and we are done!
+    ld bc, $9800
+    add hl, bc
+    ret
