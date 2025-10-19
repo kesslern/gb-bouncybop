@@ -41,8 +41,6 @@ Loop:
     call CheckPaddleCollision
     call CheckDeath
 
-    call CheckBrickCollisionMovingUp
-
     call MoveBall
     call MovePaddle
 
