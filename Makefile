@@ -1,4 +1,3 @@
-# Simple makefile for assembling and linking a GB program.
 rwildcard       =   $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 ASM             :=  rgbasm
 LINKER          :=  rgblink
@@ -15,11 +14,13 @@ ASM_FLAGS       :=  -i $(INC_DIR) -i $(SRC_DIR)
 
 .PHONY: all clean
 
-default: build
+default: all
 
-all: fix
+all: build
+	@echo "Running fix..."
+	$(MAKE) fix
 
-fix: build
+fix:
 	$(FIX) -p0 -v $(OUTPUT).gb
 
 build: clean $(OBJ_FILES)
@@ -35,6 +36,3 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 print-%  : ; @echo $* = $($*)
-
-test: build
-	evunit --config test.toml --symfile $(OUTPUT).sym $(OUTPUT).gb
