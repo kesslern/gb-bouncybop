@@ -15,6 +15,8 @@ ASM_FLAGS       :=  -i $(INC_DIR) -i $(SRC_DIR)
 
 .PHONY: all clean
 
+default: build
+
 all: fix
 
 fix: build
