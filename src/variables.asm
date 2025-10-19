@@ -37,7 +37,3 @@ wOamBallTile:
   ds 1
 wOamBallAttr:
   ds 1
-
-wOamSpriteEnd:
-  ds 160 - (wOamSpriteEnd - ramOAM)
-ramOAM_END:
