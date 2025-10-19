@@ -17,6 +17,7 @@ SECTION "vBlank interrupt handler", ROM0[$0040]
 
 SECTION "Game code", ROM0[$0150]
 Start:
+
     ; Disable interrupts during initialization
     di
     call StopLCD
@@ -41,24 +42,10 @@ Loop:
     call CheckDeath
 
     call CheckBrickCollisionMovingUp
-    ;; TODO: We could calculate VRAM offsets during the frame and store them
-    ;; instead of calculating them after vblank
 
     call MoveBall
     call MovePaddle
 
-    ; Wait for VBlank and shadow OAM to be copied via the interrupt
     halt
-
-    ;; Here we can access and update the vRAM and update OAM
-    call DeleteIfCollision
-    jr z, .end2
-
-    ld a, 1
-    ld [wBallYDir], a
-
-.end2:
-    call _HRAM
-
 
     jp Loop

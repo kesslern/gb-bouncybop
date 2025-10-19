@@ -21,6 +21,3 @@ runDMA:
     jr  nz, .wait  ;3 cycles
     ret
 dmaEnd:
-
-SECTION "Graphics Rendering Code", ROM0
-
