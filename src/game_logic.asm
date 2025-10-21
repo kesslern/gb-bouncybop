@@ -162,3 +162,71 @@ GetTileByPixel:
     ld bc, $9800
     add hl, bc
     ret
+
+IsBlockTile:
+    cp a, $05
+    ret z
+    cp a, $06
+    ret
+
+BounceAgainstBlocks:
+BounceTop:
+    ld a, [wOamBallX]
+    sub a, 4
+    ld b, a
+    ld a, [wOamBallY]
+    sub a, 16
+    ld c, a
+    call GetTileByPixel
+    ld a, [hl]
+    call IsBlockTile
+    jr nz, BounceRight
+
+    ld a, 1
+    ld [wBallYDir], a
+
+BounceRight:
+    ld a, [wOamBallX]
+    ld b, a
+    ld a, [wOamBallY]
+    sub a, 12
+    ld c, a
+    call GetTileByPixel
+    ld a, [hl]
+    call IsBlockTile
+    jr nz, BounceLeft
+
+    ld a, -1
+    ld [wBallXDir], a
+
+BounceLeft:
+    ld a, [wOamBallX]
+    sub a, 8
+    ld b, a
+    ld a, [wOamBallY]
+    sub a, 12
+    ld c, a
+    call GetTileByPixel
+    ld a, [hl]
+    call IsBlockTile
+    jr nz, BounceBottom
+
+    ld a, 1
+    ld [wBallXDir], a
+
+BounceBottom:
+    ld a, [wOamBallX]
+    sub a, 4
+    ld b, a
+    ld a, [wOamBallY]
+    sub a, 8
+    ld c, a
+    call GetTileByPixel
+    ld a, [hl]
+    call IsBlockTile
+    ret nz
+
+    ld a, -1
+    ld [wBallYDir], a
+
+    ret

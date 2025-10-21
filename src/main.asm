@@ -46,4 +46,6 @@ Loop:
 
     halt
 
+    call BounceAgainstBlocks
+
     jp Loop
