@@ -169,8 +169,23 @@ IsBlockTile:
     cp a, $06
     ret
 
+HandleBlockBounce:
+    ld a, [hl]
+    cp a, $05
+    ld [hl], 0
+    jr nz, .leftHit
+
+    inc hl
+    ld [hl], 0
+    ret
+
+    .leftHit:
+    dec hl
+    ld [hl], 0
+    ret
+
 BounceAgainstBlocks:
-BounceTop:
+.bounceTop:
     ld a, [wOamBallX]
     sub a, 4
     ld b, a
@@ -180,12 +195,13 @@ BounceTop:
     call GetTileByPixel
     ld a, [hl]
     call IsBlockTile
-    jr nz, BounceRight
+    jr nz, .bounceRight
 
     ld a, 1
     ld [wBallYDir], a
+    call HandleBlockBounce
 
-BounceRight:
+    .bounceRight:
     ld a, [wOamBallX]
     ld b, a
     ld a, [wOamBallY]
@@ -194,12 +210,13 @@ BounceRight:
     call GetTileByPixel
     ld a, [hl]
     call IsBlockTile
-    jr nz, BounceLeft
+    jr nz, .bounceLeft
 
     ld a, -1
     ld [wBallXDir], a
+    call HandleBlockBounce
 
-BounceLeft:
+    .bounceLeft:
     ld a, [wOamBallX]
     sub a, 8
     ld b, a
@@ -209,12 +226,13 @@ BounceLeft:
     call GetTileByPixel
     ld a, [hl]
     call IsBlockTile
-    jr nz, BounceBottom
+    jr nz, .bounceBottom
 
     ld a, 1
     ld [wBallXDir], a
+    call HandleBlockBounce
 
-BounceBottom:
+    .bounceBottom:
     ld a, [wOamBallX]
     sub a, 4
     ld b, a
@@ -228,5 +246,6 @@ BounceBottom:
 
     ld a, -1
     ld [wBallYDir], a
+    call HandleBlockBounce
 
     ret
