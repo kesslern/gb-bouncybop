@@ -57,7 +57,12 @@ InitSprites:
     ret
 
 InitVRAM:
-    ; Zero out Nintendo logo VRAM space
+    ; Zero out logo tiles
+    ld hl, $80D0
+    ld bc, $9930 - $80D0
+    call zero
+
+    ; Zero out Nintendo logo VRAM tiles
     ld hl, _VRAM8000
     ld bc, $81A0 - _VRAM8000
     call zero
@@ -79,10 +84,10 @@ InitVRAM:
     ENDR
     ENDR
 
-    ; Add tiles created with GBT
-    ld hl, _VRAM8000 + 32
+    ; Add tiles created with vtGBte
+    ld hl, _VRAM8000 + $20
     ld de, GBT_Tile
-    ld bc, 3 * 32
+    ld bc, GBT_Tile_End
     call memcpy
 
     ret
