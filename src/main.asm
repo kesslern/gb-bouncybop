@@ -1,6 +1,6 @@
 INCLUDE "hardware.inc"
-INCLUDE "constants.inc"
 
+INCLUDE "constants.asm"
 INCLUDE "variables.asm"
 INCLUDE "data.asm"
 INCLUDE "init.asm"
@@ -15,6 +15,34 @@ SECTION "vBlank interrupt handler", ROM0[$0040]
     call _HRAM
     reti
 
+SECTION "Test Text", ROM0
+
+testText:  db "HTTP://GITHUB.COM/KESSLERN", 255
+
+DrawTextTiles:
+
+    ld hl, testText
+    ld de, $9980
+
+DrawTextTilesLoop:
+
+    ; Check for the end of string character 255
+    ld a, [hl]
+    cp 255
+    ret z
+
+    ; Write the current character (in hl) to the address
+    ; on the tilemap (in de)
+    ld a, [hl]
+    ld [de], a
+
+    inc hl
+    inc de
+
+    ; move to the next character and next background tile
+    jp DrawTextTilesLoop
+
+
 SECTION "Game code", ROM0[$0150]
 Start:
 
@@ -26,6 +54,7 @@ Start:
     call InitBallRAM
     call InitVRAM
     call InitSprites
+    call DrawTextTiles
 
     ; Shut sound down
     ldh [rNR52], a
